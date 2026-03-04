@@ -1,27 +1,45 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import AdminDashboard from '../features/Admin/AdminDashboard'
 import LawyerDashboard from '../features/Lawyer/LawyerDashboard'
 import ClientDashboard from '../features/Client/ClientDashboard'
+import { useAuth } from '../context/AuthContext'
 
 export default function RootPage() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [userRole, setUserRole] = useState(null)
+  const { isAuthenticated, userRole, login, logout } = useAuth()
   const navigate = useNavigate()
 
   const handleRoleLogin = (role) => {
-    setUserRole(role)
-    setIsLoggedIn(true)
+    const normalizedRole = role.charAt(0).toUpperCase() + role.slice(1).toLowerCase()
+
+    const user = {
+      id: `${normalizedRole.toUpperCase()}-001`,
+      name: `${normalizedRole} User`,
+      email: `${normalizedRole.toLowerCase()}@example.com`,
+      role: normalizedRole
+    }
+
+    const loginCases = Array.from({ length: 8 }, (_, index) => {
+      const caseNumber = String(index + 1).padStart(3, '0')
+      return {
+        id: `CASE-${normalizedRole.toUpperCase()}-${caseNumber}`,
+        title: `${normalizedRole} Case ${index + 1}`,
+        status: index % 3 === 0 ? 'Open' : index % 3 === 1 ? 'In Progress' : 'Closed'
+      }
+    })
+
+    const initialCase = loginCases[0]
+
+    login({ user, currentCase: initialCase, cases: loginCases })
     navigate(`/${role.toLowerCase()}`)
   }
 
   const handleLogout = () => {
-    setIsLoggedIn(false)
-    setUserRole(null)
+    logout()
     navigate('/')
   }
 
-  if (!isLoggedIn) {
+  if (!isAuthenticated) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
         <div style={{ textAlign: 'center', padding: 24, backgroundColor: 'white', borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.1)', maxWidth: 400 }}>

@@ -1,8 +1,13 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 export default function Navbar({ userRole, onLogout }) {
   const navigate = useNavigate()
+  const { user, userRole: authRole, logout } = useAuth()
+
+  const effectiveRole = userRole || authRole || 'Guest'
+  const userLabel = user?.name || `${effectiveRole} User`
 
   return (
     <nav style={{
@@ -22,10 +27,14 @@ export default function Navbar({ userRole, onLogout }) {
       </div>
       
       <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-        <span>{userRole} User</span>
+        <span>{userLabel}</span>
         <button
           onClick={() => {
-            onLogout()
+            if (onLogout) {
+              onLogout()
+            } else {
+              logout()
+            }
             navigate('/')
           }}
           style={{

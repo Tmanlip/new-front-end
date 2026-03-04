@@ -1,8 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import Navbar from '../../../shared/Navbar'
-import Sidebar from '../../../shared/Sidebar'
-import { ADMIN_PATHS } from '../../../constants/paths'
+import AdminLayout from '../../Admin/AdminLayout'
+import { useNavigate } from 'react-router-dom'
 
 const sampleCases = [
   { id: 'C-1001', title: 'Property Dispute', client: 'Alice Johnson', status: 'Open' },
@@ -11,61 +10,59 @@ const sampleCases = [
 ]
 
 export default function CaseList({ onLogout }) {
-  const adminMenuItems = [
-    {
-      label: 'Management',
-      links: [
-        { name: 'Dashboard', href: ADMIN_PATHS.DASHBOARD, icon: '📊' },
-        { name: 'Users', href: ADMIN_PATHS.USERS, icon: '👥' },
-        { name: 'Cases', href: ADMIN_PATHS.CASES, icon: '🗂️' },
-        { name: 'Lawyers', href: ADMIN_PATHS.LAWYERS, icon: '⚖️' },
-        { name: 'Clients', href: ADMIN_PATHS.CLIENTS, icon: '📋' }
-      ]
-    },
-    {
-      label: 'System',
-      links: [
-        { name: 'Reports', href: ADMIN_PATHS.REPORTS, icon: '📈' },
-        { name: 'Settings', href: ADMIN_PATHS.SETTINGS, icon: '⚙️' },
-        { name: 'Audit Logs', href: ADMIN_PATHS.AUDIT_LOGS, icon: '📝' },
-        { name: 'Backups', href: ADMIN_PATHS.BACKUPS, icon: '💾' }
-      ]
-    }
-  ]
+  const [cases, setCases] = useState(sampleCases)
+  const navigate = useNavigate()
 
   return (
-    <div>
-      <Navbar userRole="Admin" onLogout={onLogout} />
-      <div style={{ display: 'flex' }}>
-        <Sidebar userRole="Admin" menuItems={adminMenuItems} />
-        <main style={{ marginLeft: 250, padding: 24, width: 'calc(100% - 250px)', minHeight: 'calc(100vh - 60px)' }}>
-          <h2>Cases</h2>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+    <AdminLayout onLogout={onLogout}>
+      <h2>Cases</h2>
+      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ textAlign: 'left', borderBottom: '2px solid #ddd' }}>
                 <th style={{ padding: '8px' }}>Case ID</th>
                 <th style={{ padding: '8px' }}>Title</th>
                 <th style={{ padding: '8px' }}>Client</th>
                 <th style={{ padding: '8px' }}>Status</th>
+                <th style={{ padding: '8px' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {sampleCases.map(c => (
+              {cases.map(c => (
                 <tr key={c.id} style={{ borderBottom: '1px solid #eee' }}>
                   <td style={{ padding: '8px' }}>{c.id}</td>
                   <td style={{ padding: '8px' }}>{c.title}</td>
                   <td style={{ padding: '8px' }}>{c.client}</td>
                   <td style={{ padding: '8px' }}>{c.status}</td>
+                  <td style={{ padding: '8px' }}>
+                    <button
+                      onClick={() => navigate(`/admin/cases/${c.id}/documents`, { state: { case: c } })}
+                      style={{ padding: '6px 8px', marginRight: 8, background: '#3498db', color: 'white', border: 'none', borderRadius: 4, cursor: 'pointer' }}
+                    >
+                      Manage
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
-          <div style={{ marginTop: 16 }}>
-            <button onClick={onLogout} style={{ padding: '8px 12px', background: '#e74c3c', color: 'white', border: 'none', borderRadius: 4 }}>Logout</button>
-          </div>
-        </main>
+
+      <div style={{ marginTop: 16, display: 'flex', gap: 12, alignItems: 'center' }}>
+        <button
+          onClick={() => {
+            const title = window.prompt('Enter case title:')
+            if (!title) return
+            const client = window.prompt('Enter client name:') || 'Unknown'
+            const status = window.prompt('Enter status (Open/In Progress/Closed):') || 'Open'
+            const nextIdNum = cases.length ? Math.max(...cases.map(x => parseInt(x.id.replace(/[^0-9]/g, ''), 10))) + 1 : 1001
+            const nextId = `C-${nextIdNum}`
+            setCases([...cases, { id: nextId, title, client, status }])
+          }}
+          style={{ padding: '8px 12px', background: '#34495e', color: 'white', border: 'none', borderRadius: 4 }}
+        >
+          Create Case
+        </button>
       </div>
-    </div>
+    </AdminLayout>
   )
 }
 

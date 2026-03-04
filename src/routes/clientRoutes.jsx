@@ -9,7 +9,7 @@ export const clientRoutes = [
   {
     path: CLIENT_PATHS.MY_CASES,
     label: 'My Cases',
-    component: 'Cases'
+    component: 'ClientCaseDocuments'
   },
   {
     path: CLIENT_PATHS.MY_LAWYER,
@@ -35,5 +35,10 @@ export const clientRoutes = [
     path: CLIENT_PATHS.INVOICES,
     label: 'Invoices',
     component: 'Invoices'
+  },
+  {
+    path: CLIENT_PATHS.PROFILE,
+    label: 'Profile',
+    component: 'ClientProfile'
   }
 ]

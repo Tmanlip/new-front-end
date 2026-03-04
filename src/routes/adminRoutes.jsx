@@ -15,9 +15,33 @@ export const adminRoutes = [
     component: UserList
   },
   {
+    path: ADMIN_PATHS.REGISTER_USER,
+    label: 'Register User',
+    component: 'RegisterUser',
+    hideInMenu: true
+  },
+  {
+    path: ADMIN_PATHS.EDIT_USER,
+    label: 'Edit User',
+    component: 'AdminEditUser',
+    hideInMenu: true
+  },
+  {
+    path: `${ADMIN_PATHS.USERS}/:userId/cases`,
+    label: 'User Cases',
+    component: 'AdminCaseDocuments',
+    hideInMenu: true
+  },
+  {
     path: ADMIN_PATHS.CASES,
     label: 'Cases',
     component: CaseList
+  },
+  {
+    path: `${ADMIN_PATHS.CASES}/:caseId/documents`,
+    label: 'Case Documents',
+    component: 'AdminCaseDocuments',
+    hideInMenu: true
   },
   {
     path: ADMIN_PATHS.LAWYERS,

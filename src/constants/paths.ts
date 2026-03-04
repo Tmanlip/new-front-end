@@ -3,6 +3,8 @@ export const ADMIN_PATHS = {
   DASHBOARD: '/admin',
   CASES: '/admin/cases',
   USERS: '/admin/users',
+  REGISTER_USER: '/admin/users/register',
+  EDIT_USER: '/admin/users/edit/:id',
   LAWYERS: '/admin/lawyers',
   CLIENTS: '/admin/clients',
   REPORTS: '/admin/reports',
@@ -19,7 +21,8 @@ export const LAWYER_PATHS = {
   DOCUMENTS: '/lawyer/documents',
   APPOINTMENTS: '/lawyer/appointments',
   CALENDAR: '/lawyer/calendar',
-  BILLING: '/lawyer/billing'
+  BILLING: '/lawyer/billing',
+  PROFILE: '/lawyer/profile'
 }
 
 // Client routes
@@ -30,7 +33,8 @@ export const CLIENT_PATHS = {
   MESSAGES: '/client/messages',
   UPLOAD: '/client/upload',
   DOWNLOADS: '/client/downloads',
-  INVOICES: '/client/invoices'
+  INVOICES: '/client/invoices',
+  PROFILE: '/client/profile'
 }
 
 // Public routes
