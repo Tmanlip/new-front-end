@@ -26,7 +26,29 @@ export function AuthProvider({ children }) {
   }
 
   const updateUser = (updates) => {
-    setUser(prev => ({ ...(prev || {}), ...(updates || {}) }))
+    if (!updates || typeof updates !== 'object') return
+
+    setUser(prev => {
+      if (!prev) return prev
+
+      const role = prev?.role
+      const roleAllowedFields = {
+        Client: ['name', 'email', 'specialization'],
+        Lawyer: ['name', 'email', 'specialization']
+      }
+
+      const blockedKeys = new Set(['case', 'cases', 'currentCase', 'caseId'])
+      const allowedFields = roleAllowedFields[role] || Object.keys(updates)
+
+      const sanitizedUpdates = Object.entries(updates).reduce((acc, [key, value]) => {
+        if (blockedKeys.has(key)) return acc
+        if (!allowedFields.includes(key)) return acc
+        acc[key] = value
+        return acc
+      }, {})
+
+      return { ...prev, ...sanitizedUpdates }
+    })
   }
 
   const value = useMemo(() => ({

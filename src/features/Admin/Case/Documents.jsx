@@ -3,6 +3,7 @@ import AdminLayout from '../AdminLayout'
 import CaseDocuments from '../../../shared/CaseDocuments'
 import { useParams, useLocation, Link } from 'react-router-dom' // Added Link
 import { useAuth } from '../../../context/AuthContext'
+import { ADMIN_PATHS } from '../../../constants/paths'
 
 export default function AdminCaseDocuments({ onLogout }) {
   const { userId, caseId } = useParams()
@@ -41,7 +42,11 @@ export default function AdminCaseDocuments({ onLogout }) {
           <Link to="/admin/users/edit/:id" style={{ ...btnStyle, backgroundColor: '#6c757d' }}>
             Manage Users
           </Link>
-          <Link to="/admin/cases" style={btnStyle}>
+          <Link
+            to={caseId ? ADMIN_PATHS.EDIT_CASE.replace(':id', caseId) : ADMIN_PATHS.CASES}
+            state={{ case: displayCase }}
+            style={btnStyle}
+          >
             Manage Cases
           </Link>
         </div>

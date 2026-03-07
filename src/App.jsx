@@ -1,11 +1,17 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import RootPage from './pages/RootPage'
+import LoginPage from './pages/LoginPage'
+import ForgotPasswordPage from './pages/ForgotPasswordPage'
+import ResetPasswordPage from './pages/ResetPasswordPage'
 import { getAllRoutes } from './routes'
 
 // Component map for dynamic rendering
 const componentMap = {
   RootPage: RootPage,
+  LoginPage: LoginPage,
+  ForgotPasswordPage: ForgotPasswordPage,
+  ResetPasswordPage: ResetPasswordPage,
   AdminDashboard: React.lazy(() => import('./features/Admin/AdminDashboard')),
   LawyerDashboard: React.lazy(() => import('./features/Lawyer/LawyerDashboard')),
   ClientDashboard: React.lazy(() => import('./features/Client/ClientDashboard')),
@@ -17,7 +23,8 @@ const componentMap = {
   ClientCaseDocuments: React.lazy(() => import('./features/Client/Case/Documents')),
   LawyerProfile: React.lazy(() => import('./features/Lawyer/Profile/index')),
   ClientProfile: React.lazy(() => import('./features/Client/Profile/index')),
-  AdminEditUser: React.lazy(() => import('./features/Admin/editUser/index')),
+  AdminEditUser: React.lazy(() => import('./features/Admin/User/editUser/index')),
+  AdminEditCase: React.lazy(() => import('./features/Admin/Case/editCase/index')),
   LawyerManagement: React.lazy(() => import('./features/Admin/Lawyers/index')),
   ClientManagement: React.lazy(() => import('./features/Admin/Clients/index')),
   Reports: React.lazy(() => import('./features/Admin/Reports/index')),

@@ -2,6 +2,7 @@
 export const ADMIN_PATHS = {
   DASHBOARD: '/admin',
   CASES: '/admin/cases',
+  EDIT_CASE: '/admin/cases/edit/:id',
   USERS: '/admin/users',
   REGISTER_USER: '/admin/users/register',
   EDIT_USER: '/admin/users/edit/:id',
@@ -40,5 +41,7 @@ export const CLIENT_PATHS = {
 // Public routes
 export const PUBLIC_PATHS = {
   ROOT: '/',
-  LOGIN: '/login'
+  LOGIN: '/login',
+  FORGOT_PASSWORD: '/forgot-password',
+  RESET_PASSWORD: '/reset-password'
 }

@@ -11,6 +11,24 @@ export const routes = [
     isPublic: true
   },
   {
+    path: PUBLIC_PATHS.LOGIN,
+    label: 'Login',
+    component: 'LoginPage',
+    isPublic: true
+  },
+  {
+    path: PUBLIC_PATHS.FORGOT_PASSWORD,
+    label: 'Forgot Password',
+    component: 'ForgotPasswordPage',
+    isPublic: true
+  },
+  {
+    path: PUBLIC_PATHS.RESET_PASSWORD,
+    label: 'Reset Password',
+    component: 'ResetPasswordPage',
+    isPublic: true
+  },
+  {
     role: 'admin',
     routes: adminRoutes
   },

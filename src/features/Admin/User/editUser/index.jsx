@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import AdminLayout from './../AdminLayout'
+import AdminLayout from '../../AdminLayout'
 import { AdminEditUserModal } from './editModal'
 
 const initialUsers = [

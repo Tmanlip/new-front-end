@@ -2,9 +2,11 @@ import React, { useMemo, useState } from 'react'
 import ClientLayout from './../ClientLayout'
 import { ClientEditModal } from './editInformation' // Import the modal
 import { useAuth } from '../../../context/AuthContext'
+import PasswordResetPopup from '../../../components/PasswordResetPopup'
 
 export default function ClientUserInfoPage({ onLogout }) {
   const [showModal, setShowModal] = useState(false)
+  const [showResetPopup, setShowResetPopup] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const pageSize = 3
   const { user, updateUser, userRole, cases } = useAuth()
@@ -31,12 +33,20 @@ export default function ClientUserInfoPage({ onLogout }) {
     <ClientLayout onLogout={onLogout}>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
         <h1>User Information</h1>
-        <button 
-          onClick={() => setShowModal(true)} 
-          style={{ padding: '8px 16px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
-        >
-          Edit Profile
-        </button>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button
+            onClick={() => setShowModal(true)}
+            style={{ padding: '8px 16px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+          >
+            Edit Profile
+          </button>
+          <button
+            onClick={() => setShowResetPopup(true)}
+            style={{ padding: '8px 16px', backgroundColor: '#6f42c1', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+          >
+            Reset Password
+          </button>
+        </div>
       </div>
 
       <div style={{ padding: '24px', backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #e0e0e0' }}>
@@ -99,6 +109,13 @@ export default function ClientUserInfoPage({ onLogout }) {
           user={profile} 
           onSave={handleSave} 
           onCancel={() => setShowModal(false)} 
+        />
+      )}
+
+      {showResetPopup && (
+        <PasswordResetPopup
+          email={profile.email}
+          onClose={() => setShowResetPopup(false)}
         />
       )}
     </ClientLayout>

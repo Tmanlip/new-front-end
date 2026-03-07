@@ -1,13 +1,17 @@
 import React, { useMemo, useState } from 'react'
 import LawyerLayout from './../LawyerLayout'
 import { LawyerEditModal } from './editInformation' // Import the modal
+import { LawyerEditCaseModal } from './editCase'
 import { useAuth } from '../../../context/AuthContext'
+import PasswordResetPopup from '../../../components/PasswordResetPopup'
 
 export default function LawyerUserInfoPage({ onLogout }) {
-  const [showModal, setShowModal] = useState(false)
+  const [showInfoModal, setShowInfoModal] = useState(false)
+  const [showCaseModal, setShowCaseModal] = useState(false)
+  const [showResetPopup, setShowResetPopup] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const pageSize = 3
-  const { user, updateUser, userRole, cases } = useAuth()
+  const { user, updateUser, userRole, currentCase, cases, setCases, setCurrentCase } = useAuth()
 
   const profile = useMemo(() => ({
     name: user?.name || 'Unknown User',
@@ -17,9 +21,23 @@ export default function LawyerUserInfoPage({ onLogout }) {
     joinedDate: user?.joinedDate || '—'
   }), [user, userRole])
 
-  const handleSave = (updatedData) => {
+  const handleSaveInfo = (updatedData) => {
     updateUser(updatedData)
-    setShowModal(false)
+    setShowInfoModal(false)
+  }
+
+  const handleSaveCase = (updatedCaseData) => {
+    if (!currentCase) {
+      setShowCaseModal(false)
+      return
+    }
+
+    const nextCase = { ...currentCase, ...updatedCaseData }
+    setCurrentCase(nextCase)
+    setCases(prevCases => prevCases.map(item => (
+      item.id === currentCase.id ? { ...item, ...updatedCaseData } : item
+    )))
+    setShowCaseModal(false)
   }
 
   const totalCases = cases.length
@@ -31,12 +49,27 @@ export default function LawyerUserInfoPage({ onLogout }) {
     <LawyerLayout onLogout={onLogout}>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
         <h1>User Information</h1>
-        <button 
-          onClick={() => setShowModal(true)} 
-          style={{ padding: '8px 16px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
-        >
-          Edit Profile
-        </button>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button
+            onClick={() => setShowInfoModal(true)}
+            style={{ padding: '8px 16px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+          >
+            Edit Information
+          </button>
+          <button
+            onClick={() => setShowCaseModal(true)}
+            disabled={!currentCase}
+            style={{ padding: '8px 16px', backgroundColor: currentCase ? '#17a2b8' : '#9cc8d1', color: '#fff', border: 'none', borderRadius: '4px', cursor: currentCase ? 'pointer' : 'not-allowed' }}
+          >
+            Edit Case
+          </button>
+          <button
+            onClick={() => setShowResetPopup(true)}
+            style={{ padding: '8px 16px', backgroundColor: '#6f42c1', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+          >
+            Reset Password
+          </button>
+        </div>
       </div>
 
       <div style={{ padding: '24px', backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #e0e0e0' }}>
@@ -93,12 +126,26 @@ export default function LawyerUserInfoPage({ onLogout }) {
         )}
       </div>
 
-      {/* Render the modal only when showModal is true */}
-      {showModal && (
+      {showInfoModal && (
         <LawyerEditModal 
           user={profile} 
-          onSave={handleSave} 
-          onCancel={() => setShowModal(false)} 
+          onSave={handleSaveInfo} 
+          onCancel={() => setShowInfoModal(false)} 
+        />
+      )}
+
+      {showCaseModal && (
+        <LawyerEditCaseModal
+          caseItem={currentCase}
+          onSave={handleSaveCase}
+          onCancel={() => setShowCaseModal(false)}
+        />
+      )}
+
+      {showResetPopup && (
+        <PasswordResetPopup
+          email={profile.email}
+          onClose={() => setShowResetPopup(false)}
         />
       )}
     </LawyerLayout>

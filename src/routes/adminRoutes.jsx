@@ -44,6 +44,12 @@ export const adminRoutes = [
     hideInMenu: true
   },
   {
+    path: ADMIN_PATHS.EDIT_CASE,
+    label: 'Edit Case',
+    component: 'AdminEditCase',
+    hideInMenu: true
+  },
+  {
     path: ADMIN_PATHS.LAWYERS,
     label: 'Lawyers',
     component: 'LawyerManagement'
